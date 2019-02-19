@@ -475,7 +475,7 @@ bool CFlashUpdate::checkVersion4Update()
 			return false;
 		}
 		hide();
-
+#if 0
 		//package install:
 		if (file_selected->getType() == CFile::FILE_PKG_PACKAGE){
 			COPKGManager opkg;
@@ -498,6 +498,7 @@ bool CFlashUpdate::checkVersion4Update()
 			//!always leave here!
 			return true;
 		}
+#endif
 #endif
 		//set internal filetype
 		char const * ptr = rindex(filename.c_str(), '.');

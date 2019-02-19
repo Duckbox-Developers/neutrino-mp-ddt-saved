@@ -1360,10 +1360,6 @@ menu.hint_new_zap_mode Allow channel switch while browsing\n(toggle mode with 'm
 menu.hint_next Continue to next menu\nPress menu key to close all menus
 menu.hint_next_brief Continue to next menu
 menu.hint_numeric_adjust Adjust channel list mode on numeric zap
-menu.hint_opkg Install or update software packages
-menu.hint_opkg_feed_addresses_edit Edit feed addresses
-menu.hint_opkg_install_local_package Install package from USB, SD, share or local directory.
-menu.hint_opkg_upgrade Updates all installed packages to the most recent version available
 menu.hint_osd Colors, fonts, screen size\nGUI look and feel options
 menu.hint_osd_language Select OSD language
 menu.hint_osd_preset Pre-configured screen margins for CRT and LCD TV
@@ -2067,28 +2063,6 @@ nvodselector.directormode Director mode
 nvodselector.head Subservices
 nvodselector.starttime Select starting time
 nvodselector.subservice Select subservice
-opkg.button.expert_off Standard mode
-opkg.button.expert_on Expert mode
-opkg.button.info Package information
-opkg.button.install Install package
-opkg.button.uninstall Uninstall package
-opkg.enter.feed.address Please enter address for server, local folder or share!
-opkg.enter.feed.address.example Example: http://pkg.nevis.neutrino-hd.com
-opkg.failure.install Install failed
-opkg.failure.update Update failed
-opkg.failure.upgrade Upgrade failed
-opkg.feed.addresses Feed addresses
-opkg.install.local.package Install local package
-opkg.messagebox.reinstall Re-install %s?
-opkg.messagebox.remove Remove %s?
-opkg.messagebox.size.error Not enough free memory available for this package!
-opkg.messagebox.updates.available Updates available!
-opkg.success.install Install successful!\n restart of Neutrino might be required. Restart now?
-opkg.title Package Management
-opkg.update.check Checking for updates ...
-opkg.update.reading_lists Reading package lists ...
-opkg.upgrade Upgrade installed packages
-opkg.warning_3rdparty_packages 3rd party packages could damage your system! Are you sure install this package?
 options.default Reset to defaults
 options.fb framebuffer
 options.hint_default Reset the values to their defaults

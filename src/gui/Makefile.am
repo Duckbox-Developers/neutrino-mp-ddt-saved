@@ -77,7 +77,6 @@ libneutrino_gui_a_SOURCES = \
 	network_service.cpp \
 	network_setup.cpp \
 	nfs.cpp \
-	opkg_manager.cpp \
 	osd_helpers.cpp \
 	osd_progressbar_setup.cpp \
 	osd_setup.cpp \

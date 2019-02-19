@@ -41,7 +41,6 @@
 
 #include "update_menue.h"
 #include "update_settings.h"
-#include "gui/opkg_manager.h"
 #include <gui/widget/icons.h>
 #include <driver/screen_max.h>
 #include <system/debug.h>
@@ -80,6 +79,7 @@ int CSoftwareUpdate::showSoftwareUpdate()
 	softUpdate.addIntroItems(LOCALE_SERVICEMENU_UPDATE);
 
 	unsigned int inetkey = CRCInput::RC_red;
+#if 0
 	if (COPKGManager::hasOpkgSupport()) {
 		//firmware update via opkg
 		mf = new CMenuDForwarder(LOCALE_OPKG_TITLE, true, NULL, new COPKGManager(), NULL, CRCInput::RC_red);
@@ -87,7 +87,7 @@ int CSoftwareUpdate::showSoftwareUpdate()
 		softUpdate.addItem(mf);
 		inetkey = CRCInput::convertDigitToKey(1);
 	}
-
+#endif
 	CFlashUpdate flash;
 	//online update
 	if (file_exists(g_settings.softupdate_url_file.c_str())) {
