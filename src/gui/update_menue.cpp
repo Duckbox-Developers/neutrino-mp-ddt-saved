@@ -79,15 +79,7 @@ int CSoftwareUpdate::showSoftwareUpdate()
 	softUpdate.addIntroItems(LOCALE_SERVICEMENU_UPDATE);
 
 	unsigned int inetkey = CRCInput::RC_red;
-#if 0
-	if (COPKGManager::hasOpkgSupport()) {
-		//firmware update via opkg
-		mf = new CMenuDForwarder(LOCALE_OPKG_TITLE, true, NULL, new COPKGManager(), NULL, CRCInput::RC_red);
-		mf->setHint(NEUTRINO_ICON_HINT_SW_UPDATE, LOCALE_MENU_HINT_OPKG);
-		softUpdate.addItem(mf);
-		inetkey = CRCInput::convertDigitToKey(1);
-	}
-#endif
+
 	CFlashUpdate flash;
 	//online update
 	if (file_exists(g_settings.softupdate_url_file.c_str())) {
