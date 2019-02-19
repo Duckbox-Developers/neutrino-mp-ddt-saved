@@ -980,7 +980,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.backup_dir = configfile.getString("backup_dir", "/swap/backup");
 
 	g_settings.update_dir = configfile.getString("update_dir", "/tmp");
-	g_settings.update_dir_opkg = configfile.getString("update_dir_opkg", g_settings.update_dir);
 
 	// parentallock
 	if (!parentallocked) {
@@ -1716,7 +1715,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setString("backup_dir", g_settings.backup_dir);
 
 	configfile.setString("update_dir", g_settings.update_dir);
-	configfile.setString("update_dir_opkg", g_settings.update_dir_opkg);
 
 	configfile.setString("font_file", g_settings.font_file);
 	configfile.setString("ttx_font_file", g_settings.ttx_font_file);

@@ -48,7 +48,6 @@
 
 #include <gui/color.h>
 #include <gui/filebrowser.h>
-#include <gui/opkg_manager.h>
 #include <gui/widget/msgbox.h>
 #include <gui/widget/hintbox.h>
 

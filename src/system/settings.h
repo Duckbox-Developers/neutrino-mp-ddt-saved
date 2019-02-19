@@ -737,7 +737,6 @@ struct SNeutrinoSettings
 	std::string	backup_dir;
 
 	std::string	update_dir;
-	std::string	update_dir_opkg;
 
 	//BouquetHandling
 	int bouquetlist_mode;
