@@ -478,7 +478,7 @@ bool CFlashUpdate::checkVersion4Update()
 
 #if HAVE_ARM_HARDWARE
 		//tgz package install:
-		else if (file_selected->getType() == CFile::FILE_TGZ_PACKAGE){
+		if (file_selected->getType() == CFile::FILE_TGZ_PACKAGE){
 			fileType = 'Z';
 			//!always leave here!
 			return true;
