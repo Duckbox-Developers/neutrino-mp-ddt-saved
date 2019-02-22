@@ -36,13 +36,9 @@ class CNetworkConfig
 	std::string orig_hostname;
 	bool        orig_inet_static;
 	std::string orig_ifname;
-	std::string orig_ssid;
-	std::string orig_key;
 
 	void copy_to_orig(void);
 	void init_vars(void);
-	void readWpaConfig();
-	void saveWpaConfig();
 
  public:
 	bool        automatic_start;
@@ -54,10 +50,7 @@ class CNetworkConfig
 	std::string hostname;
 	std::string mac_addr;
 	std::string ifname;
-	std::string ssid;
-	std::string key;
 	bool        inet_static;
-	bool	    wireless;
 
 	CNetworkConfig();
 	~CNetworkConfig();

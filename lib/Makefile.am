@@ -9,7 +9,6 @@ SUBDIRS = \
 	xmltree \
 	jsoncpp \
 	libtuxtxt \
-	libiw \
 	libdvbsub \
 	luaclient
 

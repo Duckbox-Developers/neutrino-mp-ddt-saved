@@ -350,17 +350,12 @@ bool addLoopbackDevice(const std::string &name, const bool automatic_start)
 	return write_interface("/etc/network/interfaces", name, automatic_start, "inet", "loopback", attribute);
 }
 
-bool setStaticAttributes(const std::string &name, const bool automatic_start, const std::string &address, const std::string &netmask, const std::string &broadcast, const std::string &gateway, bool wireless)
+bool setStaticAttributes(const std::string &name, const bool automatic_start, const std::string &address, const std::string &netmask, const std::string &broadcast, const std::string &gateway)
 {
 	std::map<std::string, std::string> attribute;
 
 	attribute["address"] = address;
 	attribute["netmask"] = netmask;
-
-	if(wireless) {
-		attribute["pre-up"] = "/etc/network/pre-" + name + ".sh";
-		attribute["post-down"] = "/etc/network/post-" + name + ".sh";
-	}
 
 	if (!broadcast.empty())
 		attribute["broadcast"] = broadcast;
@@ -371,17 +366,12 @@ bool setStaticAttributes(const std::string &name, const bool automatic_start, co
 	return write_interface("/etc/network/interfaces", name, automatic_start, "inet", "static", attribute);
 }
 
-bool setDhcpAttributes(const std::string &name, const bool automatic_start, bool wireless)
+bool setDhcpAttributes(const std::string &name, const bool automatic_start)
 {
 	std::map<std::string, std::string> attribute;
 	char hostname[100];
 	if(gethostname(hostname, sizeof(hostname)) == 0)
 		attribute["hostname"] = hostname;
-
-	if(wireless) {
-		attribute["pre-up"] = "/etc/network/pre-" + name + ".sh";
-		attribute["post-down"] = "/etc/network/post-" + name + ".sh";
-	}
 
 	return write_interface("/etc/network/interfaces", name, automatic_start, "inet", "dhcp", attribute);
 }

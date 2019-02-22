@@ -369,7 +369,6 @@ lib/jsoncpp/Makefile
 lib/libconfigfile/Makefile
 lib/libdvbsub/Makefile
 lib/libeventserver/Makefile
-lib/libiw/Makefile
 lib/libmd5sum/Makefile
 lib/libnet/Makefile
 lib/libtuxtxt/Makefile
