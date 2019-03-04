@@ -68,8 +68,6 @@ class EpgPlus
 
 		class Header
 		{
-			private:
-				CComponentsChannelLogoScalable *logo;
 			//// construction / destruction
 			public:
 				Header(CFrameBuffer* frameBuffer,
@@ -84,8 +82,6 @@ class EpgPlus
 				static void init();
 
 				void paint(const char * Name = NULL);
-
-				void paintChannelLogo(const CZapitChannel * Channel = NULL);
 
 				static int getUsedHeight();
 
@@ -195,7 +191,6 @@ class EpgPlus
 				ChannelEntry(const CZapitChannel* channel,
 					int index,
 					CFrameBuffer* frameBuffer,
-					Header* header,
 					Footer* footer,
 					CBouquetList* bouquetList,
 					int x,
@@ -220,7 +215,6 @@ class EpgPlus
 				int index;
 
 				CFrameBuffer* frameBuffer;
-				Header* header;
 				Footer* footer;
 				CBouquetList* bouquetList;
 
@@ -233,6 +227,7 @@ class EpgPlus
 
 				TCChannelEventEntries channelEventEntries;
 				CComponentsDetailsLine *detailsLine;
+				CComponentsChannelLogo *logo;
 		};
 
 		typedef std::vector<ChannelEntry*> TChannelEntries;
