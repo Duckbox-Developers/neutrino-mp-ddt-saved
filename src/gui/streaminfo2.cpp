@@ -73,14 +73,13 @@ CStreamInfo2::CStreamInfo2() : fader(g_settings.theme.menu_Content_alpha)
 	frameBuffer = CFrameBuffer::getInstance ();
 	pip = NULL;
 	signalbox = NULL;
+	font_head = SNeutrinoSettings::FONT_TYPE_MENU_TITLE;
+	font_info = SNeutrinoSettings::FONT_TYPE_MENU;
+	font_small = SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL;
 
-	font_head = SNeutrinoSettings::FONT_TYPE_FIXED_30_BOLD;
-	font_info = SNeutrinoSettings::FONT_TYPE_FIXED_20_BOLD;
-	font_small = SNeutrinoSettings::FONT_TYPE_FIXED_16_REGULAR;
-
-	hheight = g_FixedFont[font_head]->getHeight ();
-	iheight = g_FixedFont[font_info]->getHeight ();
-	sheight = g_FixedFont[font_small]->getHeight ();
+	hheight = g_Font[font_head]->getHeight ();
+	iheight = g_Font[font_info]->getHeight ();
+	sheight = g_Font[font_small]->getHeight ();
 
 	max_width = frameBuffer->getScreenWidth(true);
 	max_height = frameBuffer->getScreenHeight(true);
@@ -428,7 +427,7 @@ int CStreamInfo2::doSignalStrengthLoop ()
 	char tmp_str[150];
 	int delay_counter = 0;
 	const int delay = 15;
-	int sw = 3 * g_FixedFont[font_small]->getRenderWidth(" ") + 8 * g_FixedFont[font_small]->getMaxDigitWidth();
+	int sw = 3 * g_Font[font_small]->getRenderWidth(" ") + 8 * g_Font[font_small]->getMaxDigitWidth();
 	maxb = minb = lastb = tmp_rate = 0;
 	bool repaint_bitrate = true;
 	ts_setup ();
@@ -473,10 +472,10 @@ int CStreamInfo2::doSignalStrengthLoop ()
 				if (repaint_bitrate)
 				{
 					snprintf(tmp_str, sizeof(tmp_str), "%s:",g_Locale->getText(LOCALE_STREAMINFO_BITRATE));
-					g_FixedFont[font_info]->RenderString(dx1, average_bitrate_pos, spaceoffset, tmp_str, COL_MENUCONTENT_TEXT);
+					g_Font[font_info]->RenderString(dx1, average_bitrate_pos, spaceoffset, tmp_str, COL_MENUCONTENT_TEXT);
 
 					snprintf(tmp_str, sizeof(tmp_str), " (%s)",g_Locale->getText(LOCALE_STREAMINFO_AVERAGE_BITRATE));
-					g_FixedFont[font_info]->RenderString(dx1 + spaceoffset + sw , average_bitrate_pos, box_width - spaceoffset - sw, tmp_str, COL_MENUCONTENT_TEXT);
+					g_Font[font_info]->RenderString(dx1 + spaceoffset + sw , average_bitrate_pos, box_width - spaceoffset - sw, tmp_str, COL_MENUCONTENT_TEXT);
 					repaint_bitrate = false;
 				}
 
@@ -490,7 +489,7 @@ int CStreamInfo2::doSignalStrengthLoop ()
 				currate[4] = currate[5];
 				currate[5] = currate[6];
 				currate[6] = ' ';
-				g_FixedFont[font_info]->RenderString (dx1 + spaceoffset, average_bitrate_pos, sw, currate, COL_MENUCONTENT_TEXT);
+				g_Font[font_info]->RenderString (dx1 + spaceoffset, average_bitrate_pos, sw, currate, COL_MENUCONTENT_TEXT);
 				lastb = bit_s;
 			}
 			if ((!mp && pmt_version != current_pmt_version && delay_counter > delay) || probed)
@@ -625,7 +624,7 @@ void CStreamInfo2::paint_signal_fe_box(int _x, int _y, int w, int h)
 	else
 		tname += to_string(1 + frontend->getNumber()) + ": " + frontend->getName();
 
-	g_FixedFont[font_small]->RenderString(_x, _y + iheight, width - _x - OFFSET_INNER_MID, tname /*tuner_name.c_str()*/, COL_MENUCONTENT_TEXT);
+	g_Font[font_small]->RenderString(_x, _y + iheight, width - _x - OFFSET_INNER_MID, tname /*tuner_name.c_str()*/, COL_MENUCONTENT_TEXT);
 
 	sigBox_x = _x;
 	sigBox_y = _y + iheight + OFFSET_INNER_MID;
@@ -635,10 +634,10 @@ void CStreamInfo2::paint_signal_fe_box(int _x, int _y, int w, int h)
 	sig_text_y = sigBox_y + sigBox_h + OFFSET_INNER_SMALL;
 
 	int y1 = sig_text_y + sheight + OFFSET_INNER_SMALL;
-	int fw = g_FixedFont[font_small]->getWidth();
+	int fw = g_Font[font_small]->getWidth();
 
 	int maxmin_x; // x-position of min and max
-	int fontW = g_FixedFont[font_small]->getWidth();
+	int fontW = g_Font[font_small]->getWidth();
 	int xd;
 	int col = 0;
 
@@ -655,26 +654,26 @@ void CStreamInfo2::paint_signal_fe_box(int _x, int _y, int w, int h)
 		col = 1;
 	}
 
-	g_FixedFont[font_small]->RenderString(maxmin_x, y1 + (sheight * 1) +OFFSET_INNER_SMALL, fw*3, "max", COL_MENUCONTENT_TEXT);
-	g_FixedFont[font_small]->RenderString(maxmin_x, y1 + (sheight * 2) +OFFSET_INNER_SMALL, fw*3, "now", COL_MENUCONTENT_TEXT);
-	g_FixedFont[font_small]->RenderString(maxmin_x, y1 + (sheight * 3) +OFFSET_INNER_SMALL, fw*3, "min", COL_MENUCONTENT_TEXT);
+	g_Font[font_small]->RenderString(maxmin_x, y1 + (sheight * 1) +OFFSET_INNER_SMALL, fw*3, "max", COL_MENUCONTENT_TEXT);
+	g_Font[font_small]->RenderString(maxmin_x, y1 + (sheight * 2) +OFFSET_INNER_SMALL, fw*3, "now", COL_MENUCONTENT_TEXT);
+	g_Font[font_small]->RenderString(maxmin_x, y1 + (sheight * 3) +OFFSET_INNER_SMALL, fw*3, "min", COL_MENUCONTENT_TEXT);
 
 	if (!mp)
 	{
-		g_FixedFont[font_small]->RenderString(_x+xd*col, y1, fw*8, "BER [%]", COL_RED);
+		g_Font[font_small]->RenderString(_x+xd*col, y1, fw*8, "BER [%]", COL_RED);
 		sig_text_ber_x = _x + OFFSET_INNER_SMALL + xd * col;
 		col++;
 
-		g_FixedFont[font_small]->RenderString(_x+xd*col, y1, fw*8, "SNR [%]", COL_LIGHT_BLUE);
+		g_Font[font_small]->RenderString(_x+xd*col, y1, fw*8, "SNR [%]", COL_LIGHT_BLUE);
 		sig_text_snr_x = _x + OFFSET_INNER_SMALL + xd * col;
 		col++;
 
-		g_FixedFont[font_small]->RenderString(_x+xd*col, y1, fw*8, "SIG [%]", COL_GREEN);
+		g_Font[font_small]->RenderString(_x+xd*col, y1, fw*8, "SIG [%]", COL_GREEN);
 		sig_text_sig_x = _x + OFFSET_INNER_SMALL + xd * col;
 		col++;
 	}
 
-	g_FixedFont[font_small]->RenderString(_x+xd*col, y1, fw*10, "BR [kbps]", COL_YELLOW);
+	g_Font[font_small]->RenderString(_x+xd*col, y1, fw*10, "BR [kbps]", COL_YELLOW);
 	sig_text_rate_x = _x + OFFSET_INNER_SMALL + xd * col;
 
 	sigBox_pos = 0;
@@ -777,11 +776,11 @@ int CStreamInfo2::y_signal_fe(unsigned long value, unsigned long max_value, int 
 void CStreamInfo2::SignalRenderStr(unsigned int value, int _x, int _y)
 {
 	char str[30];
-	int fw = g_FixedFont[font_small]->getWidth();
+	int fw = g_Font[font_small]->getWidth();
 	fw *=(fw>17)?5:6;
 	frameBuffer->paintBoxRel(_x, _y - sheight + OFFSET_INNER_SMALL, fw, sheight -1, COL_MENUCONTENT_PLUS_0);
 	sprintf(str,"%6u",value);
-	g_FixedFont[font_small]->RenderString(_x, _y + OFFSET_INNER_SMALL, fw, str, COL_MENUCONTENT_TEXT);
+	g_Font[font_small]->RenderString(_x, _y + OFFSET_INNER_SMALL, fw, str, COL_MENUCONTENT_TEXT);
 }
 
 void CStreamInfo2::paint (int /*mode*/)
@@ -803,7 +802,7 @@ void CStreamInfo2::paint (int /*mode*/)
 
 		// paint backround, title pig, etc.
 		frameBuffer->paintBoxRel (0, 0, max_width, max_height, COL_MENUCONTENT_PLUS_0);
-		g_FixedFont[font_head]->RenderString (xpos, ypos + hheight, width, head_string, COL_MENUHEAD_TEXT);
+		g_Font[font_head]->RenderString (xpos, ypos + hheight, width, head_string, COL_MENUHEAD_TEXT);
 
 		ypos += hheight + iheight;
 
@@ -836,7 +835,7 @@ struct row {
 	std::string val;
 	Font *f;
 	int col;
-	row(): f(g_FixedFont[SNeutrinoSettings::FONT_TYPE_FIXED_20_BOLD])
+	row(): f(g_Font[SNeutrinoSettings::FONT_TYPE_MENU])
 	{
 	}
 };
@@ -1130,7 +1129,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 			snprintf(buf, sizeof(buf), "%llx.png", channel->getChannelID() & 0xFFFFFFFFFFFFULL);
 			r.val = buf;
 			r.col = COL_MENUCONTENT_TEXT;
-			r.f   = g_FixedFont[font_small];
+			r.f   = g_Font[font_small];
 			v.push_back(r);
 		}
 	}
@@ -1174,7 +1173,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 		snprintf(buf, sizeof(buf), "%llx.png", channel->getChannelID() & 0xFFFFFFFFFFFFULL);
 		r.val = buf;
 		r.col = COL_MENUCONTENT_TEXT;
-		r.f   = g_FixedFont[font_small];
+		r.f   = g_Font[font_small];
 		v.push_back(r);
 		// onid
 		r.key = "ONid: ";
@@ -1182,7 +1181,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 		snprintf(buf, sizeof(buf), "0x%04X (%i)", i, i);
 		r.val = buf;
 		r.col = COL_MENUCONTENT_TEXT;
-		r.f   = g_FixedFont[font_small];
+		r.f   = g_Font[font_small];
 		v.push_back(r);
 
 		// sid
@@ -1191,7 +1190,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 		snprintf(buf, sizeof(buf), "0x%04X (%i)", i, i);
 		r.val = buf;
 		r.col = COL_MENUCONTENT_TEXT;
-		r.f   = g_FixedFont[font_small];
+		r.f   = g_Font[font_small];
 		v.push_back(r);
 
 		// tsid
@@ -1200,7 +1199,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 		snprintf(buf, sizeof(buf), "0x%04X (%i)", i, i);
 		r.val = buf;
 		r.col = COL_MENUCONTENT_TEXT;
-		r.f   = g_FixedFont[font_small];
+		r.f   = g_Font[font_small];
 		v.push_back(r);
 
 		// pmtpid
@@ -1210,7 +1209,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 		snprintf(buf, sizeof(buf), "0x%04X (%i) [0x%02X]", i, i, pmt_version);
 		r.val = buf;
 		r.col = COL_MENUCONTENT_TEXT;
-		r.f   = g_FixedFont[font_small];
+		r.f   = g_Font[font_small];
 		v.push_back(r);
 
 		//vtxtpid
@@ -1221,7 +1220,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 			snprintf(buf, sizeof(buf), "0x%04X (%i)", i, i);
 			r.val = buf;
 			r.col = COL_MENUCONTENT_TEXT;
-			r.f   = g_FixedFont[font_small];
+			r.f   = g_Font[font_small];
 			v.push_back(r);
 		}
 	}
@@ -1229,7 +1228,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	for (std::vector<row>::iterator it = v.begin(); it != v.end(); ++it)
 		spaceoffset = std::max(spaceoffset, it->f->getRenderWidth(it->key));
 
-	spaceoffset = std::max(spaceoffset, g_FixedFont[font_info]->getRenderWidth(std::string(g_Locale->getText(LOCALE_STREAMINFO_BITRATE)) + ": "));
+	spaceoffset = std::max(spaceoffset, g_Font[font_info]->getRenderWidth(std::string(g_Locale->getText(LOCALE_STREAMINFO_BITRATE)) + ": "));
 
 	for (std::vector<row>::iterator it = v.begin(); it != v.end(); ++it)
 	{
@@ -1267,7 +1266,7 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 
 	for (int i = 0; i < NUM_CAIDS; i++)
 	{
-		array[i] = g_FixedFont[font_small]->getRenderWidth(casys[i]);
+		array[i] = g_Font[font_small]->getRenderWidth(casys[i]);
 		caids[i] = false;
 	}
 
@@ -1353,7 +1352,7 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 				ypos += iheight;
 				std::string casys_locale(g_Locale->getText(LOCALE_STREAMINFO_CASYSTEMS));
 				casys_locale += ":";
-				g_FixedFont[font_info]->RenderString(xpos , ypos, box_width, casys_locale, COL_MENUCONTENT_TEXT);
+				g_Font[font_info]->RenderString(xpos , ypos, box_width, casys_locale, COL_MENUCONTENT_TEXT);
 				cryptsystems = false;
 			}
 			ypos += sheight;
@@ -1371,11 +1370,11 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 					if (1 == sscanf(casys[ca_id].substr(last_pos, pos - last_pos).c_str(), "%X", &id) && acaid == id)
 						col = COL_MENUCONTENT_TEXT;
 				}
-				g_FixedFont[font_small]->RenderString(xpos + width_txt, ypos, box_width, casys[ca_id].substr(last_pos, pos - last_pos), col);
+				g_Font[font_small]->RenderString(xpos + width_txt, ypos, box_width, casys[ca_id].substr(last_pos, pos - last_pos), col);
 				if (index == 0)
 					width_txt = spaceoffset;
 				else
-					width_txt += g_FixedFont[font_small]->getRenderWidth(casys[ca_id].substr(last_pos, pos - last_pos))+10;
+					width_txt += g_Font[font_small]->getRenderWidth(casys[ca_id].substr(last_pos, pos - last_pos))+10;
 				index++;
 				if (index > 5)
 					break;
