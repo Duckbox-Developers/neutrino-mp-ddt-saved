@@ -80,8 +80,6 @@
 #include <sstream>
 #include <algorithm>
 #include <iconv.h>
-#include <ctime>
-#include <iomanip>
 #include <libdvbsub/dvbsub.h>
 #include <hardware/audio.h>
 #ifdef ENABLE_GRAPHLCD
@@ -3518,11 +3516,13 @@ void CMoviePlayerGui::makeScreenShot(bool autoshot, bool forcover)
 		cover = false;
 		autoshot = false;
 		forcover = false;
-		std::time_t t = std::time(NULL);
-		std::tm tm = *std::localtime(&t);
-		std::stringstream ss;
-		ss << std::put_time(&tm, "%Y%m%d_%H%M%S");
-		tmp_str = ss.str();
+		struct timeval tv;
+		gettimeofday(&tv, NULL);
+		char buf_time[128];
+		strftime(buf_time, sizeof(buf_time) , "_%Y%m%d_%H%M%S", localtime(&tv.tv_sec));
+		size_t pos = strlen(buf_time);
+		snprintf(&(buf_time[pos]), sizeof(buf_time) - pos - 1, "_%03d", (int) tv.tv_usec/1000);
+		tmp_str = buf_time;
 	}
 	tmp_str += ending;
 	std::string::size_type pos = fname.find_last_of('.');
