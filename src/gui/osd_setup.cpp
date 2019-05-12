@@ -735,7 +735,6 @@ int COsdSetup::showOsdSetup()
 			(g_settings.video_Mode != VIDEO_STD_AUTO));
 	CMenuOptionChooser * osd_res = new CMenuOptionChooser(LOCALE_COLORMENU_OSD_RESOLUTION, &g_settings.osd_resolution, kext, resCount, enable, this);
 	osd_res->OnAfterChangeOption.connect(sigc::mem_fun(frameBuffer->getInstance(), &CFrameBuffer::clearIconCache));
-	osd_res->OnAfterChangeOption.connect(sigc::mem_fun(osd_menu, &CMenuWidget::ResetModules));
 	osd_res->setHint("", LOCALE_MENU_HINT_OSD_RESOLUTION);
 	osd_menu->addItem(osd_res);
 #endif
@@ -1666,8 +1665,12 @@ void COsdSetup::resetRadioText()
 		if (g_Radiotext == NULL)
 			g_Radiotext = new CRadioText;
 		if (g_Radiotext && ((CNeutrinoApp::getInstance()->getMode()) == NeutrinoModes::mode_radio)){
-			printf("\033[32m[COsdSetup] %s - %d: %d\033[0m\n", __func__, __LINE__, g_RemoteControl->current_PIDs.APIDs[g_RemoteControl->current_PIDs.PIDs.selected_apid].pid);
-			g_Radiotext->setPid(g_RemoteControl->current_PIDs.APIDs[g_RemoteControl->current_PIDs.PIDs.selected_apid].pid);
+			unsigned int pid = 0;
+			if(!g_RemoteControl->current_PIDs.APIDs.empty())
+				pid = g_RemoteControl->current_PIDs.APIDs[g_RemoteControl->current_PIDs.PIDs.selected_apid].pid;
+
+			g_Radiotext->setPid(pid);
+			printf("\033[32m[COsdSetup] %s - %d: %d\033[0m\n", __func__, __LINE__, pid);
 		}
 	} else {
 		if (g_Radiotext)

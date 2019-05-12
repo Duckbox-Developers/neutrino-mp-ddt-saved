@@ -261,6 +261,9 @@ int CAdZapMenu::exec(CMenuTarget *parent, const std::string & actionKey)
 			armed = true;
 		alerted = false;
 		Update();
+		if (g_settings.adzap_zapOnActivation != SNeutrinoSettings::ADZAP_ZAP_OFF && CNeutrinoApp::getInstance()->channelList)
+			Zap_On_Activation(CNeutrinoApp::getInstance()->channelList->getActiveChannel_ChannelID());
+
 		return res;
 	}
 	if (actionKey == "disable")
@@ -280,6 +283,8 @@ int CAdZapMenu::exec(CMenuTarget *parent, const std::string & actionKey)
 			monitorLifeTime.tv_sec = getMonitorLifeTime();
 		printf("CAdZapMenu::%s: monitorLifeTime.tv_sec: %d\n", __func__, (uint) monitorLifeTime.tv_sec);
 		Update();
+		if (g_settings.adzap_zapOnActivation != SNeutrinoSettings::ADZAP_ZAP_OFF && CNeutrinoApp::getInstance()->channelList)
+			Zap_On_Activation(CNeutrinoApp::getInstance()->channelList->getActiveChannel_ChannelID());
 		return res;
 	}
 	if (actionKey == "adzap")
@@ -318,6 +323,14 @@ int CAdZapMenu::exec(CMenuTarget *parent, const std::string & actionKey)
 
 void CAdZapMenu::ShowMenu()
 {
+	#define ADZAP_ZAP_OPTION_COUNT 3
+	const CMenuOptionChooser::keyval ADZAP_ZAP_OPTIONS[ADZAP_ZAP_OPTION_COUNT] =
+	{
+		{ SNeutrinoSettings::ADZAP_ZAP_OFF, LOCALE_ADZAP_ZAP_OFF },
+		{ SNeutrinoSettings::ADZAP_ZAP_TO_LAST, LOCALE_ADZAP_ZAP_TO_LAST_CHANNEL },
+		{ SNeutrinoSettings::ADZAP_ZAP_TO_START, LOCALE_ADZAP_ZAP_TO_START_CHANNEL },
+	};
+
 	bool show_monitor = monitorLifeTime.tv_sec;
 
 	CMenuWidget *menu = new CMenuWidget(LOCALE_ADZAP, NEUTRINO_ICON_SETTINGS, width);
@@ -329,6 +342,10 @@ void CAdZapMenu::ShowMenu()
 	CMenuOptionChooser *oc = new CMenuOptionChooser(LOCALE_ADZAP_WRITEDATA, &g_settings.adzap_writeData, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 	oc->setHint(NEUTRINO_ICON_HINT_ADZAP, LOCALE_MENU_HINT_ADZAP_WRITEDATA);
 	menu->addItem(oc);
+
+	CMenuOptionChooser *oc_zap = new CMenuOptionChooser(LOCALE_ADZAP_ZAP, &g_settings.adzap_zapOnActivation, ADZAP_ZAP_OPTIONS, ADZAP_ZAP_OPTION_COUNT, true);
+	oc_zap->setHint(NEUTRINO_ICON_HINT_ADZAP, LOCALE_MENU_HINT_ADZAP_ZAP);
+	menu->addItem(oc_zap);
 
 	menu->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_ADZAP_SWITCHBACK));
 
@@ -369,4 +386,22 @@ bool CAdZapMenu::changeNotify(const neutrino_locale_t, void * data)
 		forwarders[shortcut - 1]->setMarked(false);
 	nc->setMarked(true);
 	return false;
+}
+
+void CAdZapMenu::Zap_On_Activation(t_channel_id channel_id)
+{
+	if (g_settings.adzap_zapOnActivation == SNeutrinoSettings::ADZAP_ZAP_TO_LAST)
+	{
+		CNeutrinoApp::getInstance()->channelList->numericZap(g_settings.key_lastchannel);
+	}
+	else if (g_settings.adzap_zapOnActivation == SNeutrinoSettings::ADZAP_ZAP_TO_START)
+	{
+		int mode = CNeutrinoApp::getInstance()->getMode();
+		bool isRadioMode = (mode == NeutrinoModes::mode_radio || mode == NeutrinoModes::mode_webradio);
+		const t_channel_id cur_channel_id = isRadioMode ? g_settings.startchannelradio_id : g_settings.startchanneltv_id;
+		if (cur_channel_id != channel_id)
+			CNeutrinoApp::getInstance()->channelList->zapTo_ChannelID(cur_channel_id, true);
+		else
+			CNeutrinoApp::getInstance()->channelList->numericZap(g_settings.key_lastchannel);
+	}
 }

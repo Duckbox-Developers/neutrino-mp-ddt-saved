@@ -1097,6 +1097,9 @@ void CMovieBrowser::hide(void)
 	if (m_header)	{
 		delete m_header; m_header = NULL;
 	}
+	if (m_detailsLine){
+		delete m_detailsLine; m_detailsLine = NULL;
+	}
 	old_EpgId = 0;
 	old_ChannelName.clear();
 	framebuffer->paintBackground();
@@ -4012,9 +4015,6 @@ int CYTCacheSelectorTarget::exec(CMenuTarget* /*parent*/, const std::string & ac
 void CMovieBrowser::refreshYTMenu()
 {
 	for (u_int item_id = (u_int) yt_menue->getItemsCount() - 1; item_id > yt_menue_end - 1; item_id--) {
-		CMenuItem* m = yt_menue->getItem(item_id);
-		if (m && !m->isStatic)
-			delete m;
 		yt_menue->removeItem(item_id);
 	}
 	MI_MOVIE_INFO::miSource source = (show_mode == MB_SHOW_YT) ? MI_MOVIE_INFO::YT : MI_MOVIE_INFO::NK;

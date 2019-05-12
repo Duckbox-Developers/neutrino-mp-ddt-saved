@@ -921,6 +921,8 @@ struct SNeutrinoSettings
 	//adzap
 	int adzap_zapBackPeriod;
 	int adzap_writeData;
+	int adzap_zapOnActivation;
+	enum { ADZAP_ZAP_OFF, ADZAP_ZAP_TO_LAST, ADZAP_ZAP_TO_START };
 
 	int	power_standby;
 	int	hdd_sleep;

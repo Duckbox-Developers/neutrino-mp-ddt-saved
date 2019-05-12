@@ -1071,6 +1071,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	g_settings.adzap_zapBackPeriod = configfile.getInt32("adzap_zapBackPeriod", 180);
 	g_settings.adzap_writeData = configfile.getInt32("adzap_writeData", 0);
+	g_settings.adzap_zapOnActivation = configfile.getInt32("adzap_zapOnActivation", 0);
 
 	// USERMENU -> in system/settings.h
 	//-------------------------------------------
@@ -1785,6 +1786,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("uselastchannel", g_settings.uselastchannel);
 	configfile.setInt32("adzap_zapBackPeriod", g_settings.adzap_zapBackPeriod);
 	configfile.setInt32("adzap_writeData", g_settings.adzap_writeData);
+	configfile.setInt32("adzap_zapOnActivation", g_settings.adzap_zapOnActivation);
 	//epg search
 	g_settings.epg_search_history_size = g_settings.epg_search_history.size();
 	if (g_settings.epg_search_history_size > g_settings.epg_search_history_max)
@@ -5531,10 +5533,10 @@ void CNeutrinoApp::getAnnounceEpgName(CTimerd::RecordingInfo * eventinfo, std::s
 		zAddData = g_Locale->getText(LOCALE_TIMERLIST_PROGRAM_UNKNOWN);
 	}
 
-	if(eventinfo->epgID!=0) {
+	if(eventinfo->epg_id!=0) {
 		CEPGData epgdata;
 		zAddData += " :\n";
-		if (CEitManager::getInstance()->getEPGid(eventinfo->epgID, eventinfo->epg_starttime, &epgdata)) {
+		if (CEitManager::getInstance()->getEPGid(eventinfo->epg_id, eventinfo->epg_starttime, &epgdata)) {
 			zAddData += epgdata.title;
 		}
 		else if(strlen(eventinfo->epgTitle)!=0) {
