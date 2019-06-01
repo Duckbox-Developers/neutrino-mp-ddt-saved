@@ -1860,6 +1860,8 @@ void CMovieBrowser::refreshTitle(void)
 
 	if (!m_header){
 		m_header = new CComponentsHeader(x, y, w, h, title.c_str(), icon, CComponentsHeader::CC_BTN_LEFT | CComponentsHeader::CC_BTN_RIGHT | CComponentsHeader::CC_BTN_HELP);
+	}else{
+		m_header->setCaption(title.c_str());
 	}
 	m_header->paint(CC_SAVE_SCREEN_NO);
 	newHeader = m_header->isPainted();
@@ -3914,7 +3916,7 @@ void CMovieBrowser::loadYTitles(int mode, std::string search, std::string id)
 	for (unsigned i = 0; i < ylist.size(); i++) {
 		MI_MOVIE_INFO movieInfo;
 		movieInfo.channelName = ylist[i].author;
-		movieInfo.epgTitle = ylist[i].title;
+		movieInfo.epgTitle = htmlEntityDecode(ylist[i].title);
 		movieInfo.epgInfo1 = ylist[i].category;
 		movieInfo.epgInfo2 = ylist[i].description;
 		movieInfo.length = ylist[i].duration/60 ;
