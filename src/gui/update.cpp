@@ -149,6 +149,7 @@ CFlashUpdate::CFlashUpdate()
 		sysfs = MTD_DEVICE_OF_UPDATE_PART;
 	dprintf(DEBUG_NORMAL, "[update] mtd partition to update: %s\n", sysfs.c_str());
 	notify = true;
+	gotImage = false; // NOTE: local update can't set gotImage variable!
 }
 
 
@@ -350,8 +351,11 @@ bool CFlashUpdate::selectHttpImage(void)
 	newVersion = versions[selected];
 	file_md5 = md5s[selected];
 	fileType = fileTypes[selected];
-#ifdef BOXMODEL_CS_HD2
-	if(fileType <= '2') {
+	gotImage = (fileType <= '9');
+//NI #ifdef BOXMODEL_CS_HD2
+#if 0
+	if (gotImage)
+	{
 		int esize = CMTDInfo::getInstance()->getMTDEraseSize(sysfs);
 		dprintf(DEBUG_NORMAL, "[update] erase size is %x\n", esize);
 		if (esize == 0x40000) {
@@ -360,9 +364,9 @@ bool CFlashUpdate::selectHttpImage(void)
 	}
 #endif
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	if ((fileType <= '2') && (filename.substr(filename.find_last_of(".") + 1) == "tgz"))
+	if (gotImage && (filename.substr(filename.find_last_of(".") + 1) == "tgz" || filename.substr(filename.find_last_of(".") + 1) == "zip"))
 	{
-		// manipulate fileType for tgz-packages
+		// manipulate fileType for tgz- or zip-packages
 		fileType = 'Z';
 	}
 #endif
@@ -440,10 +444,15 @@ bool CFlashUpdate::checkVersion4Update()
 	else
 	{
 		CFileBrowser UpdatesBrowser;
-
 		CFileFilter UpdatesFilter;
+
 		if (allow_flash)
+		{
 			UpdatesFilter.addFilter(FILEBROWSER_UPDATE_FILTER);
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+			UpdatesFilter.addFilter("zip");
+#endif
+		}
 
 		std::string filters[] = {"bin", "txt", "opk", "ipk"};
 		for(size_t i=0; i<sizeof(filters)/sizeof(filters[0]) ;i++)
@@ -476,14 +485,13 @@ bool CFlashUpdate::checkVersion4Update()
 		hide();
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-		//tgz package install:
-		if (file_selected->getType() == CFile::FILE_TGZ_PACKAGE){
+		//tgz or zip package install:
+		if (file_selected->getType() == CFile::FILE_TGZ_PACKAGE || file_selected->getType() == CFile::FILE_ZIP_PACKAGE) {
 			fileType = 'Z';
 			//!always leave here!
 			return true;
 		}
 #endif
-
 		//set internal filetype
 		char const * ptr = rindex(filename.c_str(), '.');
 		if(ptr) {
@@ -492,9 +500,9 @@ bool CFlashUpdate::checkVersion4Update()
 				fileType = 'A';
 			else if(!strcmp(ptr, "txt"))
 				fileType = 'T';
-			else if(!strcmp(ptr, "zip"))
-				fileType = 'Z';
 			else if(!strcmp(ptr, "tgz"))
+				fileType = 'Z';
+			else if(!strcmp(ptr, "zip"))
 				fileType = 'Z';
 			else if(!allow_flash)
 				return false;
@@ -575,7 +583,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		return menu_return::RETURN_REPAINT;
 	}
 	if(softupdate_mode==1) { //internet-update
-		if ( ShowMsg(LOCALE_MESSAGEBOX_INFO, (fileType <= '2') ? LOCALE_FLASHUPDATE_INSTALL_IMAGE : LOCALE_FLASHUPDATE_INSTALL_PACKAGE, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE) != CMsgBox::mbrYes)
+		if ( ShowMsg(LOCALE_MESSAGEBOX_INFO, gotImage ? LOCALE_FLASHUPDATE_INSTALL_IMAGE : LOCALE_FLASHUPDATE_INSTALL_PACKAGE, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE) != CMsgBox::mbrYes)
 		{
 			hide();
 			return menu_return::RETURN_REPAINT;
@@ -585,8 +593,9 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 	showGlobalStatus(60);
 
 	dprintf(DEBUG_NORMAL, "[update] flash/install filename %s type %c\n", filename.c_str(), fileType);
-	if(fileType <= '2') {
-		//flash it...
+
+	if (fileType <= '9') // flashing image
+	{
 #if ENABLE_EXTUPDATE
 #ifndef BOXMODEL_CS_HD2
 		if (g_settings.apply_settings) {
@@ -618,23 +627,8 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		sleep(2);
 		ft.reboot();
 	}
-	else if(fileType == 'T') // display file contents
-	{
-		FILE* fd = fopen(filename.c_str(), "r");
-		if(fd) {
-			char * buffer;
-			off_t filesize = lseek(fileno(fd), 0, SEEK_END);
-			lseek(fileno(fd), 0, SEEK_SET);
-			buffer =(char *) malloc((uint32_t)filesize+1);
-			fread(buffer, (uint32_t)filesize, 1, fd);
-			fclose(fd);
-			buffer[filesize] = 0;
-			ShowMsg(LOCALE_MESSAGEBOX_INFO, buffer, CMsgBox::mbrBack, CMsgBox::mbBack);
-			free(buffer);
-		}
-	}
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	else if (fileType == 'Z')
+	else if (fileType == 'Z') // flashing image with ofgwrite
 	{
 		bool flashing = false;
 		showGlobalStatus(100);
@@ -751,18 +745,18 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 			ShowHint(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_START_OFGWRITE);
 		hide();
 
-		const char ofgwrite_tgz[] = "/usr/bin/ofgwrite_tgz";
-		dprintf(DEBUG_NORMAL, "[update] calling %s %s %s %s\n", ofgwrite_tgz, g_settings.update_dir.c_str(), filename.c_str(), ofgwrite_options.c_str());
+		const char ofgwrite_caller[] = "/usr/bin/ofgwrite_caller";
+		dprintf(DEBUG_NORMAL, "[update] calling %s %s %s %s\n", ofgwrite_caller, g_settings.update_dir.c_str(), filename.c_str(), ofgwrite_options.c_str());
 #ifndef DRYRUN
 		if (flashing)
-			my_system(4, ofgwrite_tgz, g_settings.update_dir.c_str(), filename.c_str(), ofgwrite_options.c_str());
+			my_system(4, ofgwrite_caller, g_settings.update_dir.c_str(), filename.c_str(), ofgwrite_options.c_str());
 
 		/*
 		   TODO: fix osd-flickering
 		   Neutrino is clearing framebuffer, so ofgwrite's gui is cleared too.
 		*/
 
-		dprintf(DEBUG_NORMAL, "[update] %s done\n", ofgwrite_tgz);
+		dprintf(DEBUG_NORMAL, "[update] %s done\n", ofgwrite_caller);
 
 		if (restart == CMsgBox::mbrYes)
 			CNeutrinoApp::getInstance()->exec(NULL, "reboot");
@@ -770,6 +764,21 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		return menu_return::RETURN_EXIT_ALL;
 	}
 #endif
+	else if (fileType == 'T') // not image, display file contents
+	{
+		FILE* fd = fopen(filename.c_str(), "r");
+		if(fd) {
+			char * buffer;
+			off_t filesize = lseek(fileno(fd), 0, SEEK_END);
+			lseek(fileno(fd), 0, SEEK_SET);
+			buffer = (char *) malloc((uint32_t)filesize+1);
+			fread(buffer, (uint32_t)filesize, 1, fd);
+			fclose(fd);
+			buffer[filesize] = 0;
+			ShowMsg(LOCALE_MESSAGEBOX_INFO, buffer, CMsgBox::mbrBack, CMsgBox::mbBack);
+			free(buffer);
+		}
+	}
 	else // not image, install
 	{
 		const char install_sh[] = TARGET_PREFIX "/bin/install.sh";
