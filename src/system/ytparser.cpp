@@ -348,8 +348,8 @@ bool cYTFeedParser::parseFeedJSON(std::string &answer)
 		parseFeedDetailsJSON(&vinfo);
 
 #ifdef DEBUG_PARSER
-		printf("prevPageToken: %s\n", prevPageToken.c_str());
-		printf("nextPageToken: %s\n", nextPageToken.c_str());
+		printf("prevPageToken: %s\n", prev.c_str());
+		printf("nextPageToken: %s\n", next.c_str());
 		printf("vinfo.id: %s\n", vinfo.id.c_str());
 		printf("vinfo.description: %s\n", vinfo.description.c_str());
 		printf("vinfo.published: %s\n", vinfo.published.c_str());
@@ -463,7 +463,7 @@ bool cYTFeedParser::decodeVideoInfo(std::string &answer, cYTVideoInfo &vinfo)
 #endif
 			cYTVideoUrl yurl;
 			yurl.url = smap["url"];
-
+			std::size_t sig = std::string::npos;
 			std::string::size_type ptr = smap["url"].find("signature=");
 			if (ptr != std::string::npos)
 			{
@@ -472,10 +472,12 @@ bool cYTFeedParser::decodeVideoInfo(std::string &answer, cYTVideoInfo &vinfo)
 
 				if((ptr = smap["url"].find("&")) != std::string::npos)
 					yurl.sig = smap["url"].substr(0,ptr);
+			}else{
+				sig = smap["url"].find("&sig=");
 			}
 
 			int id = atoi(smap["itag"].c_str());
-			if (supportedFormat(id) && !yurl.url.empty() && !yurl.sig.empty()) {
+			if (supportedFormat(id) && !yurl.url.empty() && (!yurl.sig.empty() || (sig != std::string::npos))) {
 				yurl.quality = smap["quality"];
 				yurl.type = smap["type"];
 				vinfo.formats.insert(yt_urlmap_pair_t(id, yurl));
