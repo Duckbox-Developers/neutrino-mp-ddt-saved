@@ -34,6 +34,7 @@
 #include <driver/screen_max.h>
 #include "glcdsetup.h"
 #include <mymenu.h>
+#include <system/helpers.h>
 
 #define KEY_GLCD_BLACK			0
 #define KEY_GLCD_WHITE			1
@@ -228,8 +229,8 @@ void GLCD_Menu::GLCD_Menu_Settings()
 	m.addItem(new CMenuOptionChooser(LOCALE_GLCD_ENABLE, &g_settings.glcd_enable,
 				OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
 
-	m.addItem(new CMenuForwarder(LOCALE_LCD4L_DISPLAY_TYPE,	(nGLCD::getInstance()->GetConfigSize() > 1),
-								nGLCD::getInstance()->GetConfigName(g_settings.glcd_selected_config).c_str(), this, "select_driver"));
+	m.addItem(new CMenuForwarder(LOCALE_LCD4L_DPF_TYPE, (nGLCD::getInstance()->GetConfigSize() > 1),
+							     nGLCD::getInstance()->GetConfigName(g_settings.glcd_selected_config).c_str(), this, "select_driver"));
 	int shortcut = 1;
 	m.addItem(GenericMenuSeparatorLine);
 	m.addItem(new CMenuOptionChooser(LOCALE_GLCD_SELECT_FG, &color_fg,
@@ -297,15 +298,12 @@ void GLCD_Menu::GLCD_Menu_Select_Driver()
 		CMenuForwarder* mf;
 		for (int i = 0; i != nGLCD::getInstance()->GetConfigSize() - 1; i++)
 		{
-			mf = new CMenuForwarder(nGLCD::getInstance()->GetConfigName(i), true, NULL, selector,to_string(i).c_str());
+			mf = new CMenuForwarder(nGLCD::getInstance()->GetConfigName(i), true, NULL, selector, to_string(i).c_str());
 			m->addItem(mf);
 		}
 
 		m->enableSaveScreen();
 		m->exec(NULL, "");
-
-		if (!m->gotAction())
-			return;
 
 		delete selector;
 		m->hide();

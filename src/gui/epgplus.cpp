@@ -970,7 +970,7 @@ int EpgPlus::exec(CChannelList * pchannelList, int selectedChannelIndex, CBouque
 				refreshAll = true;
 				break;
 			}
-			else if (msg == CRCInput::RC_page_down)
+			else if (msg == CRCInput::RC_page_down && this->selectedChannelEntry != NULL)
 			{
 				int selected = this->selectedChannelEntry->index;
 				int prev_selected = selected;
@@ -991,7 +991,7 @@ int EpgPlus::exec(CChannelList * pchannelList, int selectedChannelIndex, CBouque
 				this->createChannelEntries(selected);
 				this->paint();
 			}
-			else if (msg == CRCInput::RC_page_up)
+			else if (msg == CRCInput::RC_page_up && this->selectedChannelEntry != NULL)
 			{
 				int selected = this->selectedChannelEntry->index;
 				int prev_selected = selected;
@@ -1079,7 +1079,7 @@ int EpgPlus::exec(CChannelList * pchannelList, int selectedChannelIndex, CBouque
 					CNeutrinoApp::getInstance()->channelList->zapTo_ChannelID(selectedChannelEntry->channel->getChannelID());
 				current_bouquet = bouquetList->getActiveBouquetNumber();
 			} 
-			else if (CRCInput::isNumeric(msg))
+			else if (CRCInput::isNumeric(msg) && !bouquetList->Bouquets.empty())
 			{
 				this->hide();
 				CNeutrinoApp::getInstance()->channelList->numericZap(msg);
@@ -1101,7 +1101,7 @@ int EpgPlus::exec(CChannelList * pchannelList, int selectedChannelIndex, CBouque
 				}
 
 			} 
-			else if (msg == CRCInput::RC_up)
+			else if (msg == CRCInput::RC_up && this->selectedChannelEntry != NULL)
 			{
 				int selectedChannelEntryIndex = this->selectedChannelEntry->index;
 				int prevSelectedChannelEntryIndex = selectedChannelEntryIndex;
@@ -1129,7 +1129,7 @@ int EpgPlus::exec(CChannelList * pchannelList, int selectedChannelIndex, CBouque
 					this->paintChannelEntry(selectedChannelEntryIndex - this->channelListStartIndex);
 				}
 			} 
-			else if (msg == CRCInput::RC_down)
+			else if (msg == CRCInput::RC_down && this->selectedChannelEntry != NULL)
 			{
 				int selectedChannelEntryIndex = this->selectedChannelEntry->index;
 				int prevSelectedChannelEntryIndex = this->selectedChannelEntry->index;
@@ -1201,6 +1201,9 @@ int EpgPlus::exec(CChannelList * pchannelList, int selectedChannelIndex, CBouque
 					}
 					case ViewMode_Scroll:
 					{
+						if(this->selectedChannelEntry == NULL)
+							break;
+
 						TCChannelEventEntries::const_iterator It = this->getSelectedEvent();
 
 						if ((It != this->selectedChannelEntry->channelEventEntries.begin())
@@ -1252,6 +1255,9 @@ int EpgPlus::exec(CChannelList * pchannelList, int selectedChannelIndex, CBouque
 					}
 					case ViewMode_Scroll:
 					{
+						if(this->selectedChannelEntry == NULL)
+							break;
+
 						TCChannelEventEntries::const_iterator It = this->getSelectedEvent();
 
 						if ((It != this->selectedChannelEntry->channelEventEntries.end() - 1)
@@ -1278,7 +1284,7 @@ int EpgPlus::exec(CChannelList * pchannelList, int selectedChannelIndex, CBouque
 					}
 				}
 			} 
-			else if (msg == CRCInput::RC_help || msg == CRCInput::RC_info)
+		else if (msg == CRCInput::RC_help || msg == CRCInput::RC_info && this->selectedChannelEntry != NULL)
 			{
 				TCChannelEventEntries::const_iterator It = this->getSelectedEvent();
 
@@ -1397,7 +1403,7 @@ void EpgPlus::hide()
 		this->header->head = NULL;
 	}
 
-	if (this->selectedChannelEntry->detailsLine) {
+	if (this->selectedChannelEntry && this->selectedChannelEntry->detailsLine) {
 		this->selectedChannelEntry->detailsLine->kill();
 		delete this->selectedChannelEntry->detailsLine;
 		this->selectedChannelEntry->detailsLine = NULL;
