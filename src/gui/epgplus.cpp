@@ -1284,7 +1284,7 @@ int EpgPlus::exec(CChannelList * pchannelList, int selectedChannelIndex, CBouque
 					}
 				}
 			} 
-		else if (msg == CRCInput::RC_help || msg == CRCInput::RC_info && this->selectedChannelEntry != NULL)
+			else if (msg == CRCInput::RC_help || msg == CRCInput::RC_info && this->selectedChannelEntry != NULL)
 			{
 				TCChannelEventEntries::const_iterator It = this->getSelectedEvent();
 
