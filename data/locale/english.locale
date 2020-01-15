@@ -1379,11 +1379,10 @@ menu.hint_net_proxy If you use proxy to access internet\nconfigure it here for o
 menu.hint_net_proxypass Proxy user password\nif authorization required
 menu.hint_net_proxyserver Proxy server name
 menu.hint_net_proxyuser Proxy user name\nif authorization required
-menu.hint_net_services Configure network services:\nTelnet, ftp
+menu.hint_net_services Configure network services
 menu.hint_net_setupnow Apply current settings
 menu.hint_net_setuponstartup Start network at boot time
 menu.hint_net_show Show current network settings
-menu.hint_net_telnet Enable telnet login to your box
 menu.hint_net_test Test network connection: ping gateway,\n name server and external IP
 menu.hint_network IP address, gateway, DNS, Time sync\nNetwork shares and services
 menu.hint_new_zap_mode Allow channel switch while browsing\n(toggle mode with 'mute' in channel list)

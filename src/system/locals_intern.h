@@ -1410,7 +1410,6 @@ const char * locale_real_names[] =
 	"menu.hint_net_setupnow",
 	"menu.hint_net_setuponstartup",
 	"menu.hint_net_show",
-	"menu.hint_net_telnet",
 	"menu.hint_net_test",
 	"menu.hint_network",
 	"menu.hint_new_zap_mode",
