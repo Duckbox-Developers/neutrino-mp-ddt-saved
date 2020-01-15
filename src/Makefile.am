@@ -19,7 +19,6 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/libnet \
 	-I$(top_srcdir)/lib/xmltree \
 	-I$(top_srcdir)/lib/libmd5sum \
-	-I$(top_srcdir)/lib/libupnpclient \
 	@SIGC_CFLAGS@ \
 	@FREETYPE_CFLAGS@ \
 	@AVFORMAT_CFLAGS@ \
@@ -148,11 +147,6 @@ endif
 
 if ENABLE_LUA
 neutrino_LDADD += @LUA_LIBS@
-endif
-
-if ENABLE_UPNP
-neutrino_LDADD += \
-	$(top_builddir)/lib/libupnpclient/libtuxbox-upnpclient.a
 endif
 
 if BOXTYPE_COOL

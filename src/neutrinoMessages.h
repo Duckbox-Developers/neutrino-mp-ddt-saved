@@ -186,8 +186,7 @@ struct NeutrinoModes
 		mode_ts = 7,
 		mode_off = 8,
 		mode_webtv = 9,
-		mode_upnp = 10,
-		mode_webradio = 11,
+		mode_webradio = 10,
 		mode_mask = 0xFF,
 		norezap = 0x100
 	};

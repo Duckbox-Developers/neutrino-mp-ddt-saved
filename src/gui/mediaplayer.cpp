@@ -42,9 +42,6 @@
 #include <gui/infoclock.h>
 #include <gui/movieplayer.h>
 #include <gui/pictureviewer.h>
-#if ENABLE_UPNP
-#include <gui/upnpbrowser.h>
-#endif
 #include <gui/nfs.h>
 
 #include <gui/widget/icons.h>
@@ -154,17 +151,6 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 	CMenuForwarder *fw_pviewer = new CMenuForwarder(LOCALE_MAINMENU_PICTUREVIEWER, true, NULL, new CPictureViewerGui(), NULL, CRCInput::RC_yellow);
 	fw_pviewer->setHint(NEUTRINO_ICON_HINT_PICVIEW, LOCALE_MENU_HINT_PICVIEW);
 	personalize->addItem(multimedia_menu, fw_pviewer, &g_settings.personalize[SNeutrinoSettings::P_MEDIA_PVIEWER]);
-
-#if ENABLE_UPNP
-	//upnp browser
-	static CUpnpBrowserGui *upnpbrowsergui = NULL;
-	if (!upnpbrowsergui)
-		upnpbrowsergui = new CUpnpBrowserGui();
-
-	CMenuForwarder *fw_upnp = new CMenuForwarder(LOCALE_UPNPBROWSER_HEAD, enabled, NULL, upnpbrowsergui, NULL, CRCInput::RC_blue);
-	fw_upnp->setHint(NEUTRINO_ICON_HINT_A_PIC, LOCALE_MENU_HINT_UPNP);
-	personalize->addItem(multimedia_menu, fw_upnp, &g_settings.personalize[SNeutrinoSettings::P_MEDIA_UPNP]);
-#endif
 
 	personalize->addSeparator(*multimedia_menu, LOCALE_MAINMENU_MOVIEPLAYER, true);
 //	//init movieplayer submenu

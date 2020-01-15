@@ -4197,10 +4197,6 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 			if(mode != NeutrinoModes::mode_standby)
 				standbyMode( true );
 		}
-		if((data & NeutrinoModes::mode_mask)== NeutrinoModes::mode_upnp) {
-			lastMode=mode;
-			mode=NeutrinoModes::mode_upnp;
-		}
 		if((data & NeutrinoModes::mode_mask)== NeutrinoModes::mode_audio) {
 			lastMode=mode;
 			mode=NeutrinoModes::mode_audio;

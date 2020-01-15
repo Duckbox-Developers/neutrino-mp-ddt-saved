@@ -23,7 +23,6 @@
 
 #include <global.h>
 #include <gui/bouquetlist.h>
-#include <libupnpclient/upnpclient.h>
 #include <timerdclient/timerdtypes.h>
 
 static int upDownKey(int size, neutrino_msg_t msg, int lines, int sel)
@@ -83,5 +82,4 @@ updown_t(std::vector<CBouquet*>);
 updown_t(std::vector<CZapitBouquet*>);
 updown_t(std::vector<CZapitChannel*>);
 updown_t(std::vector<CChannelEvent>);
-updown_t(std::vector<CUPnPDevice>);
 updown_t(std::vector<CTimerd::responseGetTimer>);

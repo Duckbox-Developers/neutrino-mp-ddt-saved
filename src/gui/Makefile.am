@@ -1,8 +1,5 @@
-if ENABLE_UPNP
-AM_CPPFLAGS = -fno-rtti -D__STDC_FORMAT_MACROS
-else
 AM_CPPFLAGS = -fno-rtti -fno-exceptions -D__STDC_FORMAT_MACROS
-endif
+
 BUILT_SOURCES = version.h
 version.h:
 	@rm -f $@; \
@@ -34,7 +31,6 @@ AM_CPPFLAGS += \
 	-I$(top_srcdir)/lib/libconfigfile \
 	-I$(top_srcdir)/lib/connection \
 	-I$(top_srcdir)/lib/xmltree \
-	-I$(top_srcdir)/lib/libupnpclient \
 	-I$(top_srcdir)/lib/jsoncpp \
 	@SIGC_CFLAGS@ \
 	@CURL_CFLAGS@ \
@@ -174,11 +170,6 @@ libneutrino_gui2_a_SOURCES = \
 if !BOXTYPE_SPARK
 libneutrino_gui2_a_SOURCES += \
 	cam_menu.cpp
-endif
-
-if ENABLE_UPNP
-libneutrino_gui2_a_SOURCES += \
-	upnpbrowser.cpp
 endif
 
 libtimerlist_a_SOURCES = \

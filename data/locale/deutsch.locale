@@ -1387,7 +1387,6 @@ menu.hint_net_show Zeigen Ihnen die aktuellen Netzwerkeinstellungen
 menu.hint_net_telnet Aktiviert Telnet auf Ihrer Box
 menu.hint_net_test Testet die Netzwerkverbindung:\nPing auf Gateway, Name-Server und externe IP-Adressen
 menu.hint_net_ushare Freigabe verbundener Datenträger über UPnP
-menu.hint_net_xupnpd Freigabe von Live Channels über UPNP
 menu.hint_network IP-Adresse, Gateway, DNS, Zeit-Sync, Netzwerk-Freigaben, Dienste usw.
 menu.hint_new_zap_mode Aktiviert Quickzap in der Kanalliste. Nach Betätigen der Mute-Taste wird mit den Hoch/Runter-Tasten direkt umgeschalten
 menu.hint_next Weiter zum nächsten Menü.\nDie Taste 'Menü' schließt alle Menüs
@@ -1603,7 +1602,6 @@ menu.hint_tmdb_enabled Schaltet die TMDb-Unterstützung (themoviedb.org) ein bzw
 menu.hint_tools Werkzeuge ausführen
 menu.hint_tvmode Schaltet zum TV-Modus
 menu.hint_tvradio_switch Schaltet zwischen TV- und Radio-Modus um
-menu.hint_upnp Zugriff auf UPNP-Server in Ihrem lokalen Netz
 menu.hint_vfd Frontdisplay und Power-LEDs
 menu.hint_vfd_brightness Definiert die Helligkeit im TV-Betrieb 
 menu.hint_vfd_brightness_setup Konfiguriert die Helligkeit des Frontdisplays für verschiedene Modi
@@ -2597,10 +2595,6 @@ unit.short.hour h
 unit.short.millisecond ms
 unit.short.minute min
 unit.short.second s
-upnpbrowser.head UPnP Browser
-upnpbrowser.noservers Kein UPnP-Server gefunden
-upnpbrowser.rescan Neue Suche
-upnpbrowser.scanning Suche nach UPnP-Servern
 usermenu.button_blue Benutzermenü 'blau'
 usermenu.button_green Benutzermenü 'grün'
 usermenu.button_red Benutzermenü 'rot'

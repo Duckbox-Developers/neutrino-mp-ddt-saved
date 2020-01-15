@@ -425,7 +425,6 @@ struct SNeutrinoSettings
 		P_MEDIA_INETPLAY,
 		P_MEDIA_MPLAYER,
 		P_MEDIA_PVIEWER,
-		P_MEDIA_UPNP,
 
 		//movieplayer menu
 		P_MPLAYER_MBROWSER,

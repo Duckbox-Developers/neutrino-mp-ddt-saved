@@ -1380,14 +1380,13 @@ menu.hint_net_proxy If you use proxy to access internet\nconfigure it here for o
 menu.hint_net_proxypass Proxy user password\nif authorization required
 menu.hint_net_proxyserver Proxy server name
 menu.hint_net_proxyuser Proxy user name\nif authorization required
-menu.hint_net_services Configure network services:\nTelnet, ftp, uPnp
+menu.hint_net_services Configure network services:\nTelnet, ftp
 menu.hint_net_setupnow Apply current settings
 menu.hint_net_setuponstartup Start network at boot time
 menu.hint_net_show Show current network settings
 menu.hint_net_telnet Enable telnet login to your box
 menu.hint_net_test Test network connection: ping gateway,\n name server and external IP
 menu.hint_net_ushare Share connected HDD over uPnp
-menu.hint_net_xupnpd Share live channels over UPNP
 menu.hint_network IP address, gateway, DNS, Time sync\nNetwork shares and services
 menu.hint_new_zap_mode Allow channel switch while browsing\n(toggle mode with 'mute' in channel list)
 menu.hint_next Continue to next menu\nPress menu key to close all menus
@@ -1603,7 +1602,6 @@ menu.hint_tmdb_enabled Enable or disable TMDb support (themoviedb.org)
 menu.hint_tools Run tools
 menu.hint_tvmode Switch box to TV mode
 menu.hint_tvradio_switch Switches between TV and Radio mode
-menu.hint_upnp Access UPNP servers available in your local network
 menu.hint_vfd Frontpanel LEDs, VFD options
 menu.hint_vfd_brightness Working brightness 
 menu.hint_vfd_brightness_setup Configure frontpanel display brightness\nfor different modes
@@ -2597,10 +2595,6 @@ unit.short.hour h
 unit.short.millisecond ms
 unit.short.minute min
 unit.short.second s
-upnpbrowser.head UPnP Browser
-upnpbrowser.noservers No UPnP servers found
-upnpbrowser.rescan Scan again
-upnpbrowser.scanning Scanning for UPnP servers
 usermenu.button_blue User menu blue
 usermenu.button_green User menu green
 usermenu.button_red User menu red

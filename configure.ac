@@ -373,7 +373,6 @@ lib/libeventserver/Makefile
 lib/libmd5sum/Makefile
 lib/libnet/Makefile
 lib/libtuxtxt/Makefile
-lib/libupnpclient/Makefile
 lib/luaclient/Makefile
 lib/sectionsdclient/Makefile
 lib/timerdclient/Makefile

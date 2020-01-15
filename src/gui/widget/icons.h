@@ -122,7 +122,6 @@
 #define NEUTRINO_ICON_TUNER_4		"tuner_4"
 #endif
 #define NEUTRINO_ICON_UPDATE		"softupdate"
-#define NEUTRINO_ICON_UPNP		"upnp"
 #define NEUTRINO_ICON_VIDEO		"video"
 #define NEUTRINO_ICON_VTXT		"vtxt"
 #define NEUTRINO_ICON_VTXT_GREY		"vtxt_gray"
