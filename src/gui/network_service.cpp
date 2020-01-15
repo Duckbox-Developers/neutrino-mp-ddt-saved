@@ -51,7 +51,6 @@ struct network_service
 
 static struct network_service services[] =
 {
-//	{ "FTP", "vsftpd", "", LOCALE_MENU_HINT_NET_FTPD, NULL, 0 },
 	{ "Dropbear", "dropbear", "-B", LOCALE_MENU_HINT_NET_DROPBEAR, NULL, 0 },
 };
 #define SERVICE_COUNT (sizeof(services)/sizeof(struct network_service))
