@@ -300,8 +300,10 @@ channellist.since Since
 channellist.start Starts
 ci.check_live_slot Check CI-slot for live-tv use
 ci.clock CI clock (Mhz)
+ci.clock_extra_high extra high
 ci.clock_high high
 ci.clock_normal normal
+ci.delay DVB-CI delay
 ci.empty No CAM in slot
 ci.ignore_msg Ignore CA messages
 ci.init_failed CAM init failed
@@ -310,6 +312,7 @@ ci.inserted CAM inserted in slot
 ci.removed CAM removed from slot
 ci.reset Reset
 ci.reset_standby Reset after standby
+ci.rpr Relevant PIDs routing
 ci.save_pincode Save pincode
 ci.settings Conditional access
 ci.timeout Timeout waiting CI menu ready
