@@ -177,8 +177,8 @@ CInfoClock      *InfoClock;
 CTimeOSD	*FileTimeOSD;
 int allow_flash = 1;
 Zapit_config zapitCfg;
-char zapit_lat[20]="#";
-char zapit_long[20]="#";
+char zapit_lat[21]="#";
+char zapit_long[21]="#";
 bool autoshift = false;
 uint32_t scrambled_timer;
 #if ENABLE_FASTSCAN
@@ -378,17 +378,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	}
 	else
 	{
-#if 0
-		/* try to detect bad / broken config file */
-		if (!configfile.getInt32("screen_EndX_crt_0", 0) ||
-				!configfile.getInt32("screen_EndY_crt_0", 0) ||
-				!configfile.getInt32("screen_EndX_lcd_0", 0) ||
-				!configfile.getInt32("screen_EndY_lcd_0", 0)) {
-			printf("[neutrino] config file %s is broken, using defaults\n", fname);
-			configfile.clear();
-		} else
-#endif
-			migrateConfig(fname);
+		migrateConfig(fname);
 	}
 
 	parentallocked = !access(NEUTRINO_PARENTALLOCKED_FILE, R_OK);
@@ -501,6 +491,10 @@ int CNeutrinoApp::loadSetup(const char * fname)
 		sprintf(cfg_key, "enabled_auto_mode_%d", i);
 		g_settings.enabled_auto_modes[i] = configfile.getInt32(cfg_key, 1);
 	}
+
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+	g_settings.zappingmode = configfile.getInt32( "zappingmode", 0);
+#endif
 
 	g_settings.cpufreq = configfile.getInt32("cpufreq", 0);
 #if HAVE_SH4_HARDWARE
@@ -1408,6 +1402,11 @@ void CNeutrinoApp::saveSetup(const char * fname)
 		sprintf(cfg_key, "enabled_auto_mode_%d", i);
 		configfile.setInt32(cfg_key, g_settings.enabled_auto_modes[i]);
 	}
+
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+	configfile.setInt32( "zappingmode", g_settings.zappingmode);
+#endif
+
 	configfile.setInt32( "cpufreq", g_settings.cpufreq);
 	configfile.setInt32( "standby_cpufreq", g_settings.standby_cpufreq);
 
@@ -2881,6 +2880,10 @@ TIMER_START();
 
 	cSysLoad::getInstance();
 	cHddStat::getInstance();
+
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+	videoDecoder->SetControl(VIDEO_CONTROL_ZAPPING_MODE, g_settings.zappingmode);
+#endif
 
 TIMER_STOP("################################## after all ##################################");
 	if (g_settings.softupdate_autocheck) {
@@ -5864,6 +5867,13 @@ static struct __key_rename key_rename[] = {
 	{ "screen_StartY_lcd",	"screen_StartY_lcd_0" },
 	{ "screen_EndX_lcd",	"screen_EndX_lcd_0" },
 	{ "screen_EndY_lcd",	"screen_EndY_lcd_0" },
+	{ "ci_clock", "ci_clock_0" },
+	{ "ci_save_pincode", "ci_save_pincode_0" },
+	{ "ci_pincode", "ci_pincode_0" },
+	{ "ci_ignore_messages", "ci_ignore_messages_0" },
+#if BOXMODEL_VUPLUS_ALL
+	{ "ci_rpr", "ci_rpr_0" },
+#endif
 	{ NULL, NULL }
 };
 

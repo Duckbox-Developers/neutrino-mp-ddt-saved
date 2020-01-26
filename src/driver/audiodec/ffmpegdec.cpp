@@ -324,7 +324,11 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 					next_skip_pts = pts + skip/4;
 					seek_flags = 0;
 				}
-				av_seek_frame(avc, best_stream, pts, seek_flags);
+				int result = av_seek_frame(avc, best_stream, pts, seek_flags);
+				if (result < 0) {
+					fprintf(stderr,"av_seek_frame error\n");
+				}
+				avcodec_flush_buffers(c);
 				// if a custom value was set we only jump once
 				if (actSecsToSkip != 0) {
 					*state=PLAY;
@@ -475,7 +479,7 @@ bool CFfmpegDec::SetMetaData(FILE *_in, CAudioMetaData* m, bool save_cover)
 {
 	if (!meta_data_valid)
 	{
-		if (!Init(_in, (const CFile::FileType) m->type))
+		if (!Init(_in, (CFile::FileType) m->type))
 			return false;
 
 		mutex.lock();

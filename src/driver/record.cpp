@@ -316,7 +316,7 @@ record_error_msg_t CRecordInstance::Start(CZapitChannel * channel)
 
 bool CRecordInstance::Stop(bool remove_event)
 {
-	char buf[FILENAMEBUFFERSIZE]={0};
+	char buf[FILENAMEBUFFERSIZE+4]={0};
 
 	struct stat test;
 	snprintf(buf,sizeof(buf), "%s.xml", filename);
@@ -854,7 +854,7 @@ void CRecordInstance::GetRecordString(std::string &str, std::string &dur)
 	int err = GetStatus();
 	strftime(stime, sizeof(stime), "%H:%M:%S ", localtime(&start_time));
 	time_t duration = (time(0) - start_time) / 60;
-	char dtime[20];
+	char dtime[22];
 	int h = duration / 60;
 	int m = duration - (h * 60);
 	snprintf(dtime, sizeof(dtime), "(%d %s %02d %s)", h, h == 1 ? g_Locale->getText(LOCALE_RECORDING_TIME_HOUR) : g_Locale->getText(LOCALE_RECORDING_TIME_HOURS), 
@@ -2222,7 +2222,6 @@ bool CStreamRec::Open(CZapitChannel * channel)
 	snprintf(ifcx->filename, sizeof(ifcx->filename), "%s", channel->getUrl().c_str());
 	av_dump_format(ifcx, 0, ifcx->filename, 0);
 #else
-	ifcx->url = av_strdup(!channel->getUrl().empty() ? channel->getUrl().c_str() : "");
 	av_dump_format(ifcx, 0, ifcx->url, 0);
 #endif
 
@@ -2339,7 +2338,6 @@ void CStreamRec::run()
 			}
 			if(ret != AVERROR_EOF){
 				av_packet_unref(&pkt);
-				newpkt.buf = av_buffer_create(newpkt.data, newpkt.size, av_buffer_default_free, NULL, 0);
 				pkt = newpkt;
 			}
 #endif

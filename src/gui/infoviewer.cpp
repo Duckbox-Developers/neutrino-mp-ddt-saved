@@ -327,7 +327,7 @@ void CInfoViewer::showRecordIcon (const bool show)
 		int icon_y = box_y + (box_h - icon_h)/2;
 		int txt_y  = box_y + (box_h + txt_h)/2;
 
-		char records_msg[8];
+		char records_msg[14];
 					
 		if (rec_mode == CRecordManager::RECMODE_REC)
 		{
@@ -1646,7 +1646,7 @@ void CInfoViewer::sendNoEpg(const t_channel_id for_channel_id)
 	if (!zap_mode/* & IV_MODE_DEFAULT*/) {
 		char *p = new char[sizeof(t_channel_id)];
 		memcpy(p, &for_channel_id, sizeof(t_channel_id));
-		g_RCInput->postMsg (NeutrinoMessages::EVT_NOEPG_YET, (const neutrino_msg_data_t) p, false);
+		g_RCInput->postMsg (NeutrinoMessages::EVT_NOEPG_YET, (neutrino_msg_data_t) p, false);
 	}
 }
 
@@ -1682,7 +1682,7 @@ void CInfoViewer::getEPG(const t_channel_id for_channel_id, CSectionsdClient::Cu
 		}
 		else
 			msg = NeutrinoMessages::EVT_NOEPG_YET;
-		g_RCInput->postMsg(msg, (const neutrino_msg_data_t)p, false); // data is pointer to allocated memory
+		g_RCInput->postMsg(msg, (neutrino_msg_data_t)p, false); // data is pointer to allocated memory
 		memcpy(&oldinfo, &info, sizeof(CSectionsdClient::CurrentNextInfo));
 	}
 }
@@ -1700,7 +1700,7 @@ void CInfoViewer::showSNR ()
 			y_freq -= g_SignalFont->getHeight()/2; //half line up to center freq vertically
 		int y_numbox = numbox->getYPos();
 		if ((newfreq && chanready) || SDT_freq_update) {
-			char freq[20];
+			char freq[22];
 			newfreq = false;
 
 			std::string polarisation = "";
@@ -1954,6 +1954,8 @@ void CInfoViewer::show_Data (bool calledFromEvent)
 	}
 
 	time_t jetzt = time (NULL);
+	time_t curr_start_time = info_CurrentNext.current_zeit.startzeit;
+	time_t next_start_time = info_CurrentNext.next_zeit.startzeit;
 
 	const char *unit_short_minute = g_Locale->getText(LOCALE_UNIT_SHORT_MINUTE);
 
@@ -1975,7 +1977,7 @@ void CInfoViewer::show_Data (bool calledFromEvent)
 				snprintf(runningRest, sizeof(runningRest), "%d +%d %s", info_CurrentNext.current_zeit.dauer / 60, -rest, unit_short_minute);
 		}
 
-		struct tm *pStartZeit = localtime (&info_CurrentNext.current_zeit.startzeit);
+		struct tm *pStartZeit = localtime (&curr_start_time);
 		snprintf (runningStart, sizeof(runningStart), "%02d:%02d", pStartZeit->tm_hour, pStartZeit->tm_min);
 	} else
 		last_curr_id = 0;
@@ -1983,7 +1985,7 @@ void CInfoViewer::show_Data (bool calledFromEvent)
 	if (info_CurrentNext.flags & CSectionsdClient::epgflags::has_next) {
 		unsigned dauer = info_CurrentNext.next_zeit.dauer / 60;
 		snprintf (nextDuration, sizeof(nextDuration), "%d %s", dauer, unit_short_minute);
-		struct tm *pStartZeit = localtime (&info_CurrentNext.next_zeit.startzeit);
+		struct tm *pStartZeit = localtime (&next_start_time);
 		snprintf (nextStart, sizeof(nextStart), "%02d:%02d", pStartZeit->tm_hour, pStartZeit->tm_min);
 	} else
 		last_next_id = 0;

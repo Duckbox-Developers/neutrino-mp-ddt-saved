@@ -118,7 +118,7 @@ int CMotorControl::exec(CMenuTarget* parent, const std::string &)
 	CZapitClient::commandSetScanSatelliteList sat;
 
 	sat.position = CServiceManager::getInstance()->GetSatellitePosition(scansettings.satName);
-	strncpy(sat.satName, scansettings.satName.c_str(), sizeof(sat.satName));
+	strncpy(sat.satName, scansettings.satName.c_str(), sizeof(sat.satName)-1);
 	satList.push_back(sat);
 
 	satellite_map_t & satmap = frontend->getSatellites();
@@ -138,6 +138,7 @@ int CMotorControl::exec(CMenuTarget* parent, const std::string &)
 	TP.feparams.polarization = scansettings.sat_TP_pol;
 	TP.feparams.delsys = (delivery_system_t) scansettings.sat_TP_delsys;
 	TP.feparams.modulation = (fe_modulation_t) scansettings.sat_TP_mod;
+	TP.feparams.pilot = (zapit_pilot_t) scansettings.sat_TP_pilot;
 	TP.TP_id = 0;
 	g_Zapit->tune_TP(TP);
 
