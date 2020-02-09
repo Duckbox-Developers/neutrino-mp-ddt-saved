@@ -1776,6 +1776,9 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #endif
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_stop) {
 			playstate = CMoviePlayerGui::STOPPED;
+#if HAVE_SH4_HARDWARE
+			playback->RequestAbort();
+#endif
 			keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_STOP;
 			ClearQueue();
 		} else if ((!filelist.empty() && msg == (neutrino_msg_t) CRCInput::RC_ok)) {
@@ -3274,6 +3277,9 @@ bool CMoviePlayerGui::setAPID(unsigned int i) {
 		currentac3 = ac3flags[i];
 		playback->SetAPid(currentapid, currentac3);
 		CZapit::getInstance()->SetVolumePercent((ac3flags[i] > 2) ? g_settings.audio_volume_percent_ac3 : g_settings.audio_volume_percent_pcm);
+
+		if (!isMovieBrowser)
+			return (i < numpida);
 
 		for (unsigned int a = 0; a < p_movie_info->audioPids.size(); a++) {
 			if (p_movie_info->audioPids[a].AudioPid == currentapid) {
