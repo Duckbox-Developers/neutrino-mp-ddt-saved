@@ -1054,13 +1054,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	//Movie-Player
 	g_settings.movieplayer_repeat_on = configfile.getInt32("movieplayer_repeat_on", CMoviePlayerGui::REPEAT_OFF);
-#ifdef YOUTUBE_DEV_ID
-	g_settings.youtube_dev_id = YOUTUBE_DEV_ID;
-#else
-	g_settings.youtube_dev_id = configfile.getString("youtube_dev_id","XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-#endif
-	g_settings.youtube_enabled = configfile.getInt32("youtube_enabled", 1);
-	g_settings.youtube_enabled = check_youtube_dev_id();
+
 #ifdef TMDB_API_KEY
 	g_settings.tmdb_api_key = TMDB_API_KEY;
 #else
@@ -1814,10 +1808,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 
 	//Movie-Player
 	configfile.setInt32( "movieplayer_repeat_on", g_settings.movieplayer_repeat_on );
-#ifndef YOUTUBE_DEV_ID
-	configfile.setString( "youtube_dev_id", g_settings.youtube_dev_id );
-#endif
-	configfile.setInt32( "youtube_enabled", g_settings.youtube_enabled );
 #ifndef TMDB_API_KEY
 	configfile.setString( "tmdb_api_key", g_settings.tmdb_api_key );
 #endif
@@ -5015,7 +5005,7 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		hintBox->hide();
 		delete hintBox;
 	}
-	else if(actionKey=="ytplayback" || actionKey=="tsmoviebrowser" || actionKey=="fileplayback_video" || actionKey=="fileplayback_audio") {
+	else if(actionKey=="tsmoviebrowser" || actionKey=="fileplayback_video" || actionKey=="fileplayback_audio") {
 		frameBuffer->Clear();
 		if (mode == NeutrinoModes::NeutrinoModes::mode_radio || mode == NeutrinoModes::NeutrinoModes::mode_webradio)
 			frameBuffer->stopFrame();
