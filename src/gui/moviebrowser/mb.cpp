@@ -3060,7 +3060,7 @@ void CMovieBrowser::loadMovies(bool doRefresh)
 	struct timeval t1, t2;
 	gettimeofday(&t1, NULL);
 
-	CProgressWindow loadBox(LOCALE_MOVIEBROWSER_HEAD, CCW_PERCENT 50, CCW_PERCENT 10, NULL,
+	CProgressWindow loadBox(LOCALE_MOVIEBROWSER_HEAD, CCW_PERCENT 50, CCW_PERCENT 10, NULL, &OnGlobalProgress);
 	loadBox.enableShadow();
 	loadBox.paint();
 
