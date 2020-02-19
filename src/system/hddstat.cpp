@@ -36,6 +36,7 @@
 #include <global.h>
 #include "hddstat.h"
 #include <gui/widget/menue.h>
+//#include <system/ytcache.h>
 #include <system/set_threadname.h>
 #include <driver/record.h>
 #include <driver/display.h>
@@ -73,7 +74,7 @@ void *cHddStat::Run(void *arg)
 		long long perc = -1;
 
 		if (caller->once || (g_settings.hdd_statfs_mode == SNeutrinoSettings::HDD_STATFS_ALWAYS)
-		  || (g_settings.hdd_statfs_mode == SNeutrinoSettings::HDD_STATFS_RECORDING && (CRecordManager::getInstance()->RecordingStatus()))) {
+		  || (g_settings.hdd_statfs_mode == SNeutrinoSettings::HDD_STATFS_RECORDING && (CRecordManager::getInstance()->RecordingStatus() /* || cYTCache::getInstance()->isActive() */ ))) {
 			caller->once = false;
 			struct statfs st;
 			if (statfs(_dir.c_str(), &st) || !st.f_blocks)

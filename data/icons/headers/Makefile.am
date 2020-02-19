@@ -12,6 +12,7 @@ install_DATA = \
 	icon_movieplayer.png \
 	icon_red.png \
 	icon_yellow.png \
+	icon_ytplay.png \
 	information.png \
 	keybinding.png \
 	language.png \
