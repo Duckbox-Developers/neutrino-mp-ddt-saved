@@ -37,7 +37,6 @@
 
 #include "system/settings.h"
 #include "system/set_threadname.h"
-#include "gui/widget/hintbox.h"
 
 #include <driver/screen_max.h>
 
@@ -60,6 +59,7 @@ cTmdb::cTmdb()
 #else
 	key = g_settings.tmdb_api_key;
 #endif
+	hintbox = NULL;
 }
 
 cTmdb::~cTmdb()
@@ -71,36 +71,61 @@ void cTmdb::setTitle(std::string epgtitle)
 {
 	minfo.epgtitle = epgtitle;
 
-	CHintBox hintbox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_TMDB_READ_DATA));
-	hintbox.paint();
+	hintbox = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_TMDB_READ_DATA));
+	hintbox->paint();
 
 	std::string lang = Lang2ISO639_1(g_settings.language);
 	GetMovieDetails(lang);
 	if ((minfo.result < 1 || minfo.overview.empty()) && lang != "en")
 		GetMovieDetails("en", true);
 
-	hintbox.hide();
+	if(hintbox){
+		hintbox->hide();
+		delete hintbox;
+		hintbox = NULL;
+	}
 }
 
-bool cTmdb::GetMovieDetails(std::string lang, bool second)
+bool cTmdb::GetData(std::string url, Json::Value *root)
 {
-	printf("[TMDB]: %s\n",__func__);
-	std::string url	= "http://api.themoviedb.org/3/search/multi?api_key="+key+"&language="+lang+"&query=" + encodeUrl(minfo.epgtitle);
 	std::string answer;
 	if (!getUrl(url, answer))
 		return false;
 
 	std::string errMsg = "";
-	Json::Value root;
-	bool ok = parseJsonFromString(answer, &root, &errMsg);
+	bool ok = parseJsonFromString(answer, root, &errMsg);
 	if (!ok) {
 		printf("Failed to parse JSON\n");
 		printf("%s\n", errMsg.c_str());
 		return false;
 	}
+	return true;
+}
+
+bool cTmdb::GetMovieDetails(std::string lang, bool second)
+{
+	printf("[TMDB]: %s\n",__func__);
+	Json::Value root;
+	const std::string urlapi = "http://api.themoviedb.org/3/";
+	std::string url	= urlapi + "search/multi?api_key="+key+"&language="+lang+"&query=" + encodeUrl(minfo.epgtitle);
+	if(!(GetData(url, &root)))
+		return false;
 
 	minfo.result = root.get("total_results",0).asInt();
+	if(minfo.result == 0){
+		std::string title = minfo.epgtitle;
+		size_t pos1 = title.find_last_of("(");
+		size_t pos2 = title.find_last_of(")");
+		if(pos1 != std::string::npos && pos2 != std::string::npos && pos2 > pos1){
+			printf("[TMDB]: second try\n");
+			title.replace(pos1, pos2-pos1+1, "");
+			url	= urlapi + "search/multi?api_key="+key+"&language="+lang+"&query=" + encodeUrl(title);
+			if(!(GetData(url, &root)))
+				return false;
 
+			minfo.result = root.get("total_results",0).asInt();
+		}
+	}
 	printf("[TMDB]: results: %d\n",minfo.result);
 
 	if (minfo.result > 0) {
@@ -115,17 +140,9 @@ bool cTmdb::GetMovieDetails(std::string lang, bool second)
 			minfo.media_type = elements[use_result].get("media_type","").asString();
 		}
 		if (minfo.id > -1) {
-			url = "http://api.themoviedb.org/3/"+minfo.media_type+"/"+to_string(minfo.id)+"?api_key="+key+"&language="+lang+"&append_to_response=credits";
-			answer.clear();
-			if (!getUrl(url, answer))
+			url = urlapi+minfo.media_type+"/"+to_string(minfo.id)+"?api_key="+key+"&language="+lang+"&append_to_response=credits";
+			if(!(GetData(url, &root)))
 				return false;
-
-			ok = parseJsonFromString(answer, &root, &errMsg);
-			if (!ok) {
-				printf("Failed to parse JSON\n");
-				printf("%s\n", errMsg.c_str());
-				return false;
-			}
 
 			minfo.overview = root.get("overview","").asString();
 			minfo.poster_path = root.get("poster_path","").asString();
@@ -202,6 +219,12 @@ void cTmdb::cleanup()
 
 void cTmdb::selectResult(Json::Value elements, int results, int &use_result)
 {
+	if(hintbox){
+		hintbox->hide();
+		delete hintbox;
+		hintbox = NULL;
+	}
+
 	int select = 0;
 
 	CMenuWidget *m = new CMenuWidget(LOCALE_TMDB_READ_DATA, NEUTRINO_ICON_SETTINGS);

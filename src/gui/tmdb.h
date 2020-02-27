@@ -23,6 +23,7 @@
 #include <string>
 #include "system/helpers.h"
 #include <system/helpers-json.h>
+#include "gui/widget/hintbox.h"
 
 #define TMDB_COVER "/tmp/tmdb.jpg"
 
@@ -49,9 +50,10 @@ class cTmdb
 {
 	private:
 		tmdbinfo minfo;
-
+		CHintBox* hintbox;
 		std::string key; // tmdb api key
 		bool GetMovieDetails(std::string lang, bool second = false);
+		bool GetData(std::string url, Json::Value *root);
 		void selectResult(Json::Value elements, int results, int &used_result);
 
 	public:
