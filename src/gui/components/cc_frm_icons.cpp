@@ -55,8 +55,8 @@ void CComponentsIconForm::initVarIconForm(	const int &x_pos, const int &y_pos, c
 {
 	cc_item_type 	= CC_ITEMTYPE_FRM_ICONFORM;
 
-	x 		= x_pos;
-	y 		= y_pos;
+	x = cc_xr	= x_pos;
+	y = cc_yr	= y_pos;
 	width 		= w;
 	height 		= h;
 	v_icons		= v_icon_names;
@@ -75,6 +75,9 @@ void CComponentsIconForm::initVarIconForm(	const int &x_pos, const int &y_pos, c
 
 void CComponentsIconForm::addIcon(const std::string& icon_name)
 {
+	if (icon_name.empty())
+		return;
+
 	//create new cc-picture item object
 	CComponentsPicture *ccp = new CComponentsPicture(chn_direction == CC_DIR_X ? CC_APPEND : CC_CENTERED,
 							chn_direction == CC_DIR_Y ? CC_APPEND : CC_CENTERED,
